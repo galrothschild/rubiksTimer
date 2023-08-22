@@ -18,11 +18,33 @@
 
 <body>
     <div class="container">
-        <header id="scrambleDisplay">
+        <header id="scrambleDisplay" class="scrambleDisplay">
 
         </header>
-        <aside></aside>
-        <main>0:00</main>
+        <aside class="sidebar">
+            <table class="currentSession">
+                <tr>
+                    <th></th>
+                    <th>Current</th>
+                    <th>Best</th>
+                </tr>
+                <tr>
+                    <th>time</th>
+                    <td id="session-currentTime"></td>
+                    <td id="session-bestTime"></td>
+                </tr>
+                <tr>
+                    <th>mo3</th>
+                    <td id="session-currentMo3"></td>
+                    <td id="session-bestMo3"></td>
+                </tr>
+            </table>
+        </aside>
+        <main class="timer">
+            <div class="time">0:00</div>
+            <div class="ao5">AO5: <span id="ao5"></span></div>
+            <div class="ao12">AO12: <span id="ao12"></span></div>
+        </main>
     </div>
     <script src="script.js"></script>
 </body>
