@@ -24,7 +24,7 @@ body {
     grid-template-areas:
         "side header"
         "side main";
-    grid-template-columns: 1fr 6fr;
+    grid-template-columns: 1fr 5fr;
     grid-template-rows: max(200px, 20vh) 1fr;
     height: 100vh;
 }
@@ -51,10 +51,11 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 
 .sidebar>.currentSession {
-    width: 100%;
+    width: calc(100% - 1rem);
     height: 10vh;
     border-collapse: collapse;
 }
@@ -62,6 +63,7 @@ body {
 .currentSession,
 .currentSession :where(th, td) {
     border: 3px solid var(--light-blue);
+
 }
 
 .timer {
