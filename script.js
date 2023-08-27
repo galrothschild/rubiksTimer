@@ -4,6 +4,7 @@ let spacePressed = false;
 let stopwatchInitiated = false;
 let stopwatchRunning = false;
 let stopwatchID = 0;
+let stopwatchTimeoutID = 0;
 function init() {
     display(generateScamble().join(" "));
     setUserControls();
@@ -20,7 +21,7 @@ function generateScamble() {
     for (let i = 0; i < length; i++) {
         let side = scrambleOptions[randomIntInRange(0, scrambleOptions.length - 1)];
         let addon = scrambleAddonOptions[randomIntInRange(0, scrambleAddonOptions.length - 1)];
-        if (i !== 0 && scramble[i - 1].slice(0, 1) === side) {
+        if ((i !== 0 && scramble[i - 1].slice(0, 1) === side) || (i > 1 && scramble[i - 2].slice(0, 1) === side)) {
             i--;
         } else {
             scramble.push(side + addon);
@@ -51,6 +52,7 @@ function display(scramble) {
     scrambleElement.setAttribute("scramble", scramble);
     scrambleElement.classList.add("visualizer");
     let header = document.getElementById("scrambleDisplay");
+    header.innerHTML = "";
     header.appendChild(scrambleElement);
     header.appendChild(scrambleAlgorithm);
 }
@@ -66,6 +68,7 @@ function setUserControls() {
             await startStopwatch();
         } else if (event.key === " " && stopwatchInitiated && stopwatchRunning) {
             clearInterval(stopwatchID);
+            display(generateScamble().join(" "));
             stopwatchRunning = false;
             stopwatchInitiated = false;
         }
@@ -74,6 +77,8 @@ function setUserControls() {
         console.log(stopwatchInitiated, stopwatchRunning);
         if (event.key === " " && !stopwatchInitiated) {
             spacePressed = false;
+            clearTimeout(stopwatchTimeoutID);
+            time.style.color = "";
         } else if (event.key === " " && stopwatchInitiated && !stopwatchRunning) {
             time.style.color = "";
             runStopwatch();
@@ -85,19 +90,12 @@ function startStopwatch() {
     return new Promise((resolve, reject) => {
         let time = document.getElementById("time");
         time.style.color = "red";
-        let id = setTimeout(() => {
+        stopwatchTimeoutID = setTimeout(() => {
             time.style.color = "green";
             stopwatchInitiated = true;
             console.log(stopwatchInitiated);
             resolve();
         }, 1000);
-
-        window.addEventListener("keyup", (event) => {
-            if (event.key === " " && !stopwatchInitiated) {
-                clearTimeout(id);
-                time.style.color = "";
-            }
-        });
     });
 }
 function runStopwatch() {

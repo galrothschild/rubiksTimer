@@ -8,6 +8,11 @@
     --light-gray: hsl(0, 0%, 90%);
 }
 
+@font-face {
+    font-family: digitalmono;
+    src: url("./Assets/digital-7.ttf");
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -75,7 +80,7 @@ body {
     place-items: center;
     gap: 10%;
     font-size: 3rem;
-    font-family: 'Inconsolata', monospace;
+    font-family: digitalmono, monospace;
     background-color: var(--light-gray);
     padding-top: 30px;
 }
