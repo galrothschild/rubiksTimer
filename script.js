@@ -1,5 +1,6 @@
 const scrambleOptions = ["F", "B", "U", "D", "R", "L"];
 const scrambleAddonOptions = ["2", "'", ""];
+const coolScrambles = ["L U B' U' R L' B R' F B' D R D' F'"];
 let spacePressed = false;
 let stopwatchInitiated = false;
 let stopwatchRunning = false;
