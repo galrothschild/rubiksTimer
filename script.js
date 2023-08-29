@@ -6,12 +6,18 @@ let stopwatchInitiated = false;
 let stopwatchRunning = false;
 let stopwatchID = 0;
 let stopwatchTimeoutID = 0;
+let currentScramble = 1;
 function init() {
     display(generateScamble().join(" "));
     setUserControls();
 }
 init();
 
+function ScrambleScore(id, scramble) {
+    this.id = id;
+    this.scramble = scramble;
+
+}
 function randomIntInRange(min = 0, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
