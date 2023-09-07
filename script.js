@@ -23,31 +23,6 @@ function ScrambleScore(scramble) {
     this.status = "In Progress";
 }
 
-function getScores() {
-
-}
-
-function ScrambleScore(scramble) {
-    this.scramble = scramble;
-    this.time = 0;
-    this.status = "In Progress";
-}
-
-function getScores() {
-
-}
-
-function ScrambleScore(scramble) {
-    this.scramble = scramble;
-    this.time = 0;
-    this.status = "In Progress";
-}
-
-function ScrambleScore(id, scramble) {
-    this.id = id;
-    this.scramble = scramble;
-
-}
 function randomIntInRange(min = 0, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
