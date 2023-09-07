@@ -10,6 +10,16 @@ function init() {
 }
 init();
 
+function getScores() {
+
+}
+
+function ScrambleScore(scramble) {
+    this.scramble = scramble;
+    this.time = 0;
+    this.status = "In Progress";
+}
+
 function randomIntInRange(min = 0, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -100,6 +110,7 @@ function startStopwatch() {
         });
     });
 }
+
 function runStopwatch() {
     console.log("object");
     let secondElement = document.getElementById("seconds");
