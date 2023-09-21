@@ -1,22 +1,36 @@
 const scrambleOptions = ["F", "B", "U", "D", "R", "L"];
 const scrambleAddonOptions = ["2", "'", ""];
-const coolScrambles = ["L U B' U' R L' B R' F B' D R D' F'"];
 let spacePressed = false;
 let stopwatchInitiated = false;
 let stopwatchRunning = false;
 let stopwatchID = 0;
 let stopwatchTimeoutID = 0;
 let currentScramble = 1;
+let scoreArray = [];
+// Things the game needs to do on first load
 function init() {
-    display(generateScamble().join(" "));
+    getScoresFromLocalStorage();
+    let generatedScramble = generateScramble().join(" ");
+    display(generatedScramble);
     setUserControls();
 }
 init();
 
-function getScores() {
-
+function getScoresFromLocalStorage() {
+    if (localStorage.getItem("scores") !== null) {
+        let scores = JSON.parse(localStorage.getItem("scores"));
+        if (scores[scores.length - 1]["status"] === "In Progress") {
+            scores.pop();
+        }
+        scoreArray = scores;
+    }
+    updateScoreToLocalStorage();
 }
 
+function updateScoreToLocalStorage() {
+    localStorage.setItem("scores", JSON.stringify(scoreArray));
+    displayAO5AO12();
+}
 function ScrambleScore(scramble) {
     this.scramble = scramble;
     this.time = 0;
@@ -27,7 +41,7 @@ function randomIntInRange(min = 0, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-function generateScamble() {
+function generateScramble() {
     const length = randomIntInRange(19, 21);
     const scramble = [];
     for (let i = 0; i < length; i++) {
@@ -40,6 +54,7 @@ function generateScamble() {
         }
 
     }
+    scoreArray.push(new ScrambleScore(scramble.join(" ")));
     return scramble;
 }
 
@@ -69,24 +84,51 @@ function display(scramble) {
     header.appendChild(scrambleAlgorithm);
 }
 
+function displayAO5AO12() {
+    const ao5 = document.getElementById("ao5");
+    const ao12 = document.getElementById("ao12");
+    const filteredScores = scoreArray.filter(score => score.status === "OK");
+    if (filteredScores.length >= 5) {
+        let lastFiveScores = filteredScores.slice(Math.max(filteredScores.length - 5, 0));
+        ao5.innerText = (lastFiveScores.reduce((acc, curr) => acc + curr.time, 0) / 5).toFixed(2).replace(".", ":");
+    } else {
+        ao5.innerText = "N/A";
+    }
+    if (filteredScores.length >= 12) {
+        let lastFiveScores = filteredScores.slice(Math.max(filteredScores.length - 12, 0));
+        ao12.innerText = (lastFiveScores.reduce((acc, curr) => acc + curr.time, 0) / 12).toFixed(2).replace(".", ":");
+    } else {
+        ao12.innerText = "N/A";
+    }
+}
+
+function showScores() {
+
+}
+
 function setUserControls() {
 
     window.addEventListener("keydown", async (event) => {
-        console.log(spacePressed);
         if (event.key === " " && !spacePressed) {
             spacePressed = true;
             document.getElementById("seconds").innerText = "00";
-            document.getElementById("hudredthSecond").innerText = "00";
+            document.getElementById("hundredthSecond").innerText = "00";
             await startStopwatch();
         } else if (event.key === " " && stopwatchInitiated && stopwatchRunning) {
             clearInterval(stopwatchID);
-            display(generateScamble().join(" "));
+
+            let time = +document.getElementById("seconds").innerText + +document.getElementById("hundredthSecond").innerText / 100;
+            scoreArray[scoreArray.length - 1]["time"] = time;
+            scoreArray[scoreArray.length - 1]["status"] = "OK";
+            updateScoreToLocalStorage();
+            let generatedScramble = generateScramble().join(" ");
+
+            display(generatedScramble);
             stopwatchRunning = false;
             stopwatchInitiated = false;
         }
     });
     window.addEventListener("keyup", (event) => {
-        console.log(stopwatchInitiated, stopwatchRunning);
         if (event.key === " " && !stopwatchInitiated) {
             spacePressed = false;
             clearTimeout(stopwatchTimeoutID);
@@ -105,26 +147,24 @@ function startStopwatch() {
         stopwatchTimeoutID = setTimeout(() => {
             time.style.color = "green";
             stopwatchInitiated = true;
-            console.log(stopwatchInitiated);
             resolve();
         }, 1000);
     });
 }
 
 function runStopwatch() {
-    console.log("object");
     let secondElement = document.getElementById("seconds");
-    let hundredthSecondElement = document.getElementById("hudredthSecond");
+    let hundredthSecondElement = document.getElementById("hundredthSecond");
     let seconds = 0;
-    let hundredthSecond = 0;
+    let hundredthSeconds = 0;
     stopwatchRunning = true;
     stopwatchID = setInterval(() => {
-        hundredthSecondElement.innerText = `${hundredthSecond}`.padStart(2, "0");
+        hundredthSecondElement.innerText = `${hundredthSeconds}`.padStart(2, "0");
         secondElement.innerText = `${seconds}`.padStart(2, "0");
-        hundredthSecond++;
-        if (hundredthSecond === 100) {
+        hundredthSeconds++;
+        if (hundredthSeconds === 100) {
             seconds++;
-            hundredthSecond = 0;
+            hundredthSeconds = 0;
         }
     }, 10);
 }
