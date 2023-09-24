@@ -111,15 +111,68 @@ function showScores() {
             const row = document.createElement("tr");
             row.innerHTML = `
         <td>${index + 1}</td>
-        <td>${score.time.toFixed(2)}</td>
+        <td>${score.status !== "DNF" ? score.time.toFixed(2) : "--"}</td>
         <td>${score.status}</td>
         `;
+            row.addEventListener("click", event => {
+                let solveID = +event.target.parentElement.children[0].innerText;
+                const modalStatus = document.getElementById("modal-status");
+                document.getElementById("modal-solveID").innerText = `Solve #${solveID}`;
+                document.getElementById("modal-scramble").innerText = `${scoreArray[solveID - 1]["scramble"]}`;
+                if (scoreArray[solveID - 1]["status"] !== "DNF") {
+                    document.getElementById("modal-time").innerText = `${scoreArray[solveID - 1]["time"].toFixed(2)}`;
+                } else {
+                    document.getElementById("modal-time").innerText = "--";
+                }
+                modalStatus.value = scoreArray[solveID - 1]["status"];
+                modalStatus.setAttribute("data-id", solveID);
+                document.getElementById("modal-delete").setAttribute("data-id", solveID);
+                document.getElementById("score-modal").classList.add("show");
+                document.getElementById("overlay").classList.add("show");
+            });
             solvesTable.insertBefore(row, solvesTable.firstChild);
         }
     });
 }
 
 function setUserControls() {
+
+    document.getElementById("modal-delete").addEventListener("click", (event) => {
+        let solveID = +event.target.attributes["data-id"].value;
+        scoreArray.splice(solveID - 1, 1);
+        updateScoreToLocalStorage();
+        showScores();
+        document.getElementById("overlay").classList.remove("show");
+        document.getElementById("score-modal").classList.remove("show");
+    });
+    document.getElementById("modal-status").addEventListener("change", (event) => {
+        let solveID = event.target.attributes["data-id"].value;
+        let status = event.target.value;
+        console.log(status);
+        let currentStatus = scoreArray[solveID - 1]["status"];
+        if (currentStatus === "+2") {
+            scoreArray[solveID - 1]["time"] -= 2;
+        }
+        else if (status === "+2") {
+            scoreArray[solveID - 1]["time"] += 2;
+        }
+        scoreArray[solveID - 1]["status"] = status;
+        if (scoreArray[solveID - 1]["status"] !== "DNF") {
+            document.getElementById("modal-time").innerText = `${scoreArray[solveID - 1]["time"].toFixed(2)}`;
+        } else {
+            document.getElementById("modal-time").innerText = "--";
+        }
+        updateScoreToLocalStorage();
+        showScores();
+    });
+    document.getElementById("overlay").addEventListener("click", () => {
+        document.getElementById("overlay").classList.remove("show");
+        document.getElementById("score-modal").classList.remove("show");
+    });
+    document.getElementById("modal-close").addEventListener("click", () => {
+        document.getElementById("overlay").classList.remove("show");
+        document.getElementById("score-modal").classList.remove("show");
+    });
 
     window.addEventListener("keydown", async (event) => {
         if (event.key === " " && !spacePressed) {
