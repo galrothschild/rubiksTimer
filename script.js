@@ -55,6 +55,7 @@ function generateScramble() {
 
     }
     scoreArray.push(new ScrambleScore(scramble.join(" ")));
+    showScores();
     return scramble;
 }
 
@@ -103,7 +104,19 @@ function displayAO5AO12() {
 }
 
 function showScores() {
-
+    solvesTable = document.getElementById("solvesTable");
+    solvesTable.innerHTML = "";
+    scoreArray.forEach((score, index) => {
+        if (score.status !== "In Progress") {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${score.time.toFixed(2)}</td>
+        <td>${score.status}</td>
+        `;
+            solvesTable.insertBefore(row, solvesTable.firstChild);
+        }
+    });
 }
 
 function setUserControls() {
