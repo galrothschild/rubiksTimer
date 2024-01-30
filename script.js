@@ -19,7 +19,7 @@ init();
 function getScoresFromLocalStorage() {
     if (localStorage.getItem("rubiks-scores") !== null) {
         let scores = JSON.parse(localStorage.getItem("rubiks-scores"));
-        if (scores[rubiks - scores.length - 1]["status"] === "In Progress") {
+        if (scores[scores.length - 1]["status"] === "In Progress") {
             scores.pop();
         }
         scoreArray = scores;
