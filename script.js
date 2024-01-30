@@ -148,7 +148,6 @@ function setUserControls() {
     document.getElementById("modal-status").addEventListener("change", (event) => {
         let solveID = event.target.attributes["data-id"].value;
         let status = event.target.value;
-        console.log(status);
         let currentStatus = scoreArray[solveID - 1]["status"];
         if (currentStatus === "+2") {
             scoreArray[solveID - 1]["time"] -= 2;
