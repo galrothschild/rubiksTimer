@@ -17,9 +17,9 @@ function init() {
 init();
 
 function getScoresFromLocalStorage() {
-    if (localStorage.getItem("scores") !== null) {
-        let scores = JSON.parse(localStorage.getItem("scores"));
-        if (scores[scores.length - 1]["status"] === "In Progress") {
+    if (localStorage.getItem("rubiks-scores") !== null) {
+        let scores = JSON.parse(localStorage.getItem("rubiks-scores"));
+        if (scores[rubiks - scores.length - 1]["status"] === "In Progress") {
             scores.pop();
         }
         scoreArray = scores;
@@ -28,7 +28,7 @@ function getScoresFromLocalStorage() {
 }
 
 function updateScoreToLocalStorage() {
-    localStorage.setItem("scores", JSON.stringify(scoreArray));
+    localStorage.setItem("rubiks-scores", JSON.stringify(scoreArray));
     displayAO5AO12();
 }
 function ScrambleScore(scramble) {
